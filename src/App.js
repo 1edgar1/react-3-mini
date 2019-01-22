@@ -31,6 +31,12 @@ class App extends Component {
   getVehicles() {
     // axios (GET)
     // setState with response -> vehiclesToDisplay
+    axios.get("http://joes-autos.herokuapp.com/api/vehicles").then(response => {
+      toast.success("This call was succesfuly");
+      this.setState({
+        vehiclesToDisplay:response.data
+      })
+    } )
   }
 
   getPotentialBuyers() {
@@ -41,6 +47,15 @@ class App extends Component {
   sellCar(id) {
     // axios (DELETE)
     // setState with response -> vehiclesToDisplay
+
+    axios.delete(`http://joes-autos.herokuapp.com/api/vehicles/${id}`).then((response)=>{
+      console.log(response.data)
+      toast.success("Vehicle Sold!")
+      this.setState({
+        vehiclesToDisplay:response.data.vehicles
+      })
+    })
+
   }
 
   filterByMake() {
@@ -60,9 +75,18 @@ class App extends Component {
   updatePrice(priceChange, id) {
     // axios (PUT)
     // setState with response -> vehiclesToDisplay
+
+    axios.put(`http://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`) .then(response =>{
+      toast.success("These prices were updated");
+      this.setState({
+        vehiclesToDisplay:response.data.vehicles
+      })
+    }).catch(err => console.log(err))
   }
 
   addCar() {
+     // axios (POST)
+    // setState with response -> vehiclesToDisplay
     let newCar = {
       make: this.make.value,
       model: this.model.value,
@@ -70,20 +94,31 @@ class App extends Component {
       year: this.year.value,
       price: this.price.value
     };
-
-    // axios (POST)
-    // setState with response -> vehiclesToDisplay
+   axios.post("http://joes-autos.herokuapp.com/api/vehicles",newCar).then((response)=>{
+     console.log(response.data);
+     toast.success("New Car Added")
+     this.setState({
+       vehiclesToDisplay:response.data.vehicles
+     })
+   })
   }
 
   addBuyer() {
+    //axios (POST)
+    // setState with response -> buyersToDisplay
     let newBuyer = {
       name: this.name.value,
       phone: this.phone.value,
       address: this.address.value
     };
-
-    //axios (POST)
-    // setState with response -> buyersToDisplay
+    axios.post("http://joes-autos.herokuapp.com/api/buyers", newBuyer).then((response) =>{
+      console.log(response.data);
+      toast.success("New Buyer Added");
+      this.setState({
+        buyersToDisplay:response.data.buyers
+      })
+    })
+    
   }
 
   deleteBuyer(id) {
